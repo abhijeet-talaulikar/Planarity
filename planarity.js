@@ -2,8 +2,8 @@ Number.prototype.between = function (min, max) {
     return this > min && this < max;
 };
 
-n = Math.floor((Math.random() * 100) % 3);
-if(n == 2) n = 9;
+n = Math.floor((Math.random() * 100) % 2);
+if(n) n = 9;
 else n = 8;
 m = 2 * n - 4;
 vertices = new Array(n);
