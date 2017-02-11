@@ -2,9 +2,7 @@ Number.prototype.between = function (min, max) {
     return this > min && this < max;
 };
 
-n = Math.floor((Math.random() * 100) % 2);
-if(n) n = 10;
-else n = 9;
+n = 10;
 m = 2 * n - 4;
 vertices = new Array(n);
 for(i = 0;i < n;i++) vertices[i] = [0, 0];
