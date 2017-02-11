@@ -3,8 +3,8 @@ Number.prototype.between = function (min, max) {
 };
 
 n = Math.floor((Math.random() * 100) % 3);
-if(n == 2) n = 8;
-else n = 7;
+if(n == 2) n = 9;
+else n = 8;
 m = 2 * n - 4;
 vertices = new Array(n);
 for(i = 0;i < n;i++) vertices[i] = [0, 0];
