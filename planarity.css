@@ -1,0 +1,14 @@
+h3 {
+	text-align: center;
+	color: #444;
+	font-family: Georgia, serif;
+}
+
+h3 span {
+	color: green;
+}
+
+#playArea {
+	display: block;
+	margin: auto;
+}
