@@ -2,7 +2,7 @@ Number.prototype.between = function (min, max) {
     return this > min && this < max;
 };
 
-n = 10;
+n = 9;
 m = 2 * n - 4;
 vertices = new Array(n);
 for(i = 0;i < n;i++) vertices[i] = [0, 0];
@@ -104,7 +104,7 @@ function Generate() {
 	}
 	
 	//generate random edges
-	while(!isConnected(edges) || success()) {
+	while(!Deg2(edges) || success()) {
 		for(i = 0;i < m;i++) {
 			var u = Math.floor((Math.random() * 100) % n), v = u;
 			while(v == u) v = Math.floor((Math.random() * 100) % n);
@@ -115,8 +115,13 @@ function Generate() {
 	drawEdges(vertices, edges, n, m);
 }
 
-function isConnected(edges) {
+function Connected(edges) {
 	for(i = 0;i < n;i++) if(edges[i].indexOf(1) < 0) return false;
+	return true;
+}
+
+function Deg2(edges) {
+	for(i = 0;i < n;i++) if(edges[i].indexOf(1) == edges[i].lastIndexOf(1)) return false;
 	return true;
 }
 
