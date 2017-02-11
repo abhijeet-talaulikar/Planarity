@@ -107,6 +107,7 @@ function Generate() {
 	
 	//generate random edges
 	while(!Deg2(edges) || success()) {
+		for(i = 0;i < n;i++) for(j = 0;j < n;j++) edges[i][j] = 0;
 		for(i = 0;i < m;i++) {
 			var u = Math.floor((Math.random() * 100) % n), v = u;
 			while(v == u) v = Math.floor((Math.random() * 100) % n);
@@ -115,11 +116,6 @@ function Generate() {
 		}
 	}
 	drawEdges(vertices, edges, n, m);
-}
-
-function Connected(edges) {
-	for(i = 0;i < n;i++) if(edges[i].indexOf(1) < 0) return false;
-	return true;
 }
 
 function Deg2(edges) {
