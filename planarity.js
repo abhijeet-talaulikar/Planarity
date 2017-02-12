@@ -41,7 +41,7 @@ function drawEdges(vertices, edges, n, m) {
 				layer: true,
 				groups: ['edges'],
 				strokeStyle: 'red',
-				strokeWidth: 3,
+				strokeWidth: 1,
 				x1: vertices[i][0], y1: vertices[i][1],
 				x2: vertices[j][0], y2: vertices[j][1]
 			});
