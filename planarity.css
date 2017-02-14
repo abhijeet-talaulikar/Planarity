@@ -1,10 +1,25 @@
-h3, h4 {
+body {
+	overflow-y: hidden;
+}
+
+h4, #credits {
 	text-align: center;
 	color: #444;
 	font-family: Georgia, serif;
 }
 
-h3 span {
+#moves, #intersections, #new {
+	color: #444;
+	font-family: Georgia, serif;
+	padding-left: 60px;
+	display: inline;
+}
+
+#new input[type='number'] {
+	width: 50px;
+}
+
+h4 span {
 	color: green;
 }
 

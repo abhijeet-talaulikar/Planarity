@@ -2,20 +2,25 @@ Number.prototype.between = function (min, max) {
     return this > min && this < max;
 };
 
-n = Math.floor((Math.random() * 100) % 3);
-if(n == 0) n = 11;
-else if(n == 1) n = 10;
-else n = 9;
-m = 2 * n - 4;
-vertices = new Array(n);
-for(i = 0;i < n;i++) vertices[i] = [0, 0];
-edges = new Array(n);
-for(i = 0;i < n;i++) edges[i] = new Array(n);
-for(i = 0;i < n;i++) for(j = 0;j < n;j++) edges[i][j] = 0;
+moves = 0;
+done = false;
+vertices = new Array(31);
+edges = new Array(31);
+for(i = 0;i < 31;i++) edges[i] = new Array(31);
 
-$( document ).ready(function() {
-	Generate();
+$(document).ready(function() {
+	$('#moves span').html(moves);
+	Generate(9, 2*9-4);
 });
+
+function reset(n) {
+	if(parseInt(n).between(5, 31)) {
+		done = false;
+		moves = 0;
+		$('#moves span').html(moves);
+		Generate(n, 2 * n - 4);
+	}
+}
 
 // Returns true if two line segments intersect.
 // Based on http://stackoverflow.com/a/565282/64009
@@ -48,7 +53,9 @@ function drawEdges(vertices, edges, n, m) {
 	}
 }
 
-function Generate() {
+function Generate(n, m) {
+	for(var i = 0;i < 31;i++) vertices[i] = [0, 0];
+	for(var i = 0;i < 31;i++) for(j = 0;j < 31;j++) edges[i][j] = 0;
 	$('#playArea').removeLayers();
 	$('#playArea').clearCanvas();
 	for(i = 0;i < n;i++) {
@@ -83,15 +90,8 @@ function Generate() {
 				mousedown: 'move',
 				mouseup: 'pointer'
 			},
-			drag: function(layer) {
-				V = $('#playArea').getLayerGroup('vertices');
-				$('#playArea').removeLayerGroup('edges');
-				for(i = 0;i < n;i++) vertices[i] = [V[i].x, V[i].y];
-				drawEdges(vertices, edges, n, m);
-			},
-			dragstop: function(layer) {
-				drawEdges(vertices, edges, n, m);
-				if(success()) {
+			dragstart: function(layer) {
+				if(success(n, m)) {
 					$('#playArea').setLayers({
 						fillStyle: 'green',
 						strokeStyle: 'green'
@@ -102,14 +102,35 @@ function Generate() {
 						strokeStyle: '#555'
 					})
 				}
+			},
+			drag: function(layer) {
+				V = $('#playArea').getLayerGroup('vertices');
+				$('#playArea').removeLayerGroup('edges');
+				for(i = 0;i < n;i++) vertices[i] = [V[i].x, V[i].y];
+				drawEdges(vertices, edges, n, m);
+			},
+			dragstop: function(layer) {
+				drawEdges(vertices, edges, n, m);
+				if(success(n, m)) {
+					$('#playArea').setLayers({
+						fillStyle: 'green',
+						strokeStyle: 'green'
+					});
+				} else {
+					$('#playArea').setLayerGroup('vertices', {
+						fillStyle: 'red',
+						strokeStyle: '#555'
+					})
+				}
+				if(done == false) $('#moves span').html(++moves);
 			}
 		});
 	}
 	
 	//generate random edges
-	while(!Deg2(edges) || success()) {
-		for(i = 0;i < n;i++) for(j = 0;j < n;j++) edges[i][j] = 0;
-		for(i = 0;i < m;i++) {
+	while(!Deg2(edges, n, m) || success(n, m)) {
+		for(var i = 0;i < n;i++) for(j = 0;j < n;j++) edges[i][j] = 0;
+		for(var i = 0;i < m;i++) {
 			var u = Math.floor((Math.random() * 100) % n), v = u;
 			while(v == u) v = Math.floor((Math.random() * 100) % n);
 			edges[u][v] = 1;
@@ -119,12 +140,13 @@ function Generate() {
 	drawEdges(vertices, edges, n, m);
 }
 
-function Deg2(edges) {
+function Deg2(edges, n, m) {
 	for(i = 0;i < n;i++) if(edges[i].indexOf(1) == edges[i].lastIndexOf(1)) return false;
 	return true;
 }
 
-function success() {
+function success(n, m) {
+	var count = 0, flag = 0;
 	for(i = 0;i < n;i++) {
 		for(j = 0;j < n;j++) {
 			if(edges[i][j]) {
@@ -138,8 +160,8 @@ function success() {
 							b[1] = [vertices[q][0], vertices[q][1]];
 							if(i == p && j == q) continue;
 							else if(intersect(a, b)) {
-								console.log("found");
-								return false;
+								count++;
+								flag = 1;
 							}
 						}
 					}
@@ -147,5 +169,8 @@ function success() {
 			}
 		}
 	}
-	return true;
+	$('#intersections span').html(count / 8);
+	done = true;
+	if(flag) done = false;
+	return done;
 }

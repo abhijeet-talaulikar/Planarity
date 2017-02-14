@@ -9,9 +9,16 @@
 		<script src="planarity.js"></script>
 	</head>
 	<body>
-		<h3>Can you untangle the graph? See if you can position the vertices so that no two lines cross. 
-		(<span>Green</span> = Success)</h3><br />
-		<canvas id="playArea" width="1100" height="550"></canvas>
-		<h4>Designed by Abhijeet Talaulikar.</h4>
+		<h4>Can you untangle the graph? See if you can position the vertices so that no two lines cross. 
+		(<span>Green</span> = Success)</h4>
+	 	<div style="margin:auto;display:block;width:900px;">
+			<h5 id="moves">Number of moves: <span></span></h5>
+			<h5 id="intersections">Number of crossings: <span></span></h5>
+			<h5 id="new">Number of vertices: <input type="number" id="n" min="6" max="30" value="10" /> 
+			<input type="button" value="Generate" onclick="reset($('#n').val())" /></h5>
+		</div>
+		<br />
+		<canvas id="playArea" width="1100" height="520"></canvas>
+		<h5 id="credits">Designed by Abhijeet Talaulikar.</h5>
 	</body>
 </html>
