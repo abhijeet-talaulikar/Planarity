@@ -3,22 +3,39 @@ Number.prototype.between = function (min, max) {
 };
 
 moves = 0;
+n = 9;
+m = 2 * n - 4;
 done = false;
+highlighted = false;
 vertices = new Array(31);
 edges = new Array(31);
 for(i = 0;i < 31;i++) edges[i] = new Array(31);
 
 $(document).ready(function() {
 	$('#moves span').html(moves);
-	Generate(9, 2*9-4);
+	Generate(n, m);
+	$('#hCheck').click(function() {
+		if(highlighted) {
+			$('#hCheck').val("Highlight");
+			highlighted = false;
+			$('#playArea').removeLayerGroup('edges');
+			drawEdges(vertices, edges, n, m);
+		} else {
+			$('#hCheck').val("Dehighlight");
+			highlighted = true;
+			highlight(vertices, edges, n, m);
+		}
+	});
 });
 
-function reset(n) {
-	if(parseInt(n).between(5, 31)) {
+function reset(n1) {
+	if(parseInt(n1).between(5, 31)) {
 		done = false;
 		moves = 0;
 		$('#moves span').html(moves);
-		Generate(n, 2 * n - 4);
+		n = n1;
+		m = 2 * n - 4;
+		Generate(n, m);
 	}
 }
 
@@ -50,6 +67,44 @@ function drawEdges(vertices, edges, n, m) {
 				x1: vertices[i][0], y1: vertices[i][1],
 				x2: vertices[j][0], y2: vertices[j][1]
 			});
+	}
+}
+
+function highlight(vertices, edges, n, m) {
+	for(i = 0;i < n;i++) {
+		for(j = 0;j < n;j++) {
+			if(edges[i][j]) {
+				for(p = 0;p < n;p++) {
+					for(q = 0;q < n;q++) {
+						if(edges[p][q]) {
+							var a = new Array(2), b = new Array(2);
+							a[0] = [vertices[i][0], vertices[i][1]];
+							a[1] = [vertices[j][0], vertices[j][1]];
+							b[0] = [vertices[p][0], vertices[p][1]];
+							b[1] = [vertices[q][0], vertices[q][1]];
+							if(i == p && j == q) continue;
+							else if(intersect(a, b)) {
+								$('#playArea').drawLine({
+									layer: true,
+									groups: ['edges'],
+									strokeStyle: '#f46e42',
+									strokeWidth: 1,
+									x1: a[0][0], y1: a[0][1],
+									x2: a[1][0], y2: a[1][1]
+								}).drawLine({
+									layer: true,
+									groups: ['edges'],
+									strokeStyle: '#f46e42',
+									strokeWidth: 1,
+									x1: b[0][0], y1: b[0][1],
+									x2: b[1][0], y2: b[1][1]
+								});
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 }
 
@@ -108,9 +163,11 @@ function Generate(n, m) {
 				$('#playArea').removeLayerGroup('edges');
 				for(i = 0;i < n;i++) vertices[i] = [V[i].x, V[i].y];
 				drawEdges(vertices, edges, n, m);
+				if(highlighted) highlight(vertices, edges, n, m);
 			},
 			dragstop: function(layer) {
 				drawEdges(vertices, edges, n, m);
+				if(highlighted) highlight(vertices, edges, n, m);
 				if(success(n, m)) {
 					$('#playArea').setLayers({
 						fillStyle: 'green',
@@ -126,7 +183,28 @@ function Generate(n, m) {
 			}
 		});
 	}
-	
+	for(i = 0;i < n;i++) {
+		for(j = 0;j < n;j++) {
+			if(edges[i][j]) {
+				for(p = 0;p < n;p++) {
+					for(q = 0;q < n;q++) {
+						if(edges[p][q]) {
+							var a = new Array(2), b = new Array(2);
+							a[0] = [vertices[i][0], vertices[i][1]];
+							a[1] = [vertices[j][0], vertices[j][1]];
+							b[0] = [vertices[p][0], vertices[p][1]];
+							b[1] = [vertices[q][0], vertices[q][1]];
+							if(i == p && j == q) continue;
+							else if(intersect(a, b)) {
+								count++;
+								flag = 1;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 	//generate random edges
 	while(!Deg2(edges, n, m) || success(n, m)) {
 		for(var i = 0;i < n;i++) for(j = 0;j < n;j++) edges[i][j] = 0;

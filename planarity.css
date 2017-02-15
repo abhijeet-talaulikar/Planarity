@@ -11,7 +11,11 @@ h4, #credits {
 #moves, #intersections, #new {
 	color: #444;
 	font-family: Georgia, serif;
-	padding-left: 60px;
+	padding-left: 30px;
+	display: inline;
+}
+
+#highlight {
 	display: inline;
 }
 

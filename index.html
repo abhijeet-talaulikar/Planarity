@@ -11,11 +11,12 @@
 	<body>
 		<h4>Can you untangle the graph? See if you can position the vertices so that no two lines cross. 
 		(<span>Green</span> = Success)</h4>
-	 	<div style="margin:auto;display:block;width:900px;">
+	 	<div style="margin:auto;display:block;width:950px;">
 			<h5 id="moves">Number of moves: <span></span></h5>
 			<h5 id="intersections">Number of crossings: <span></span></h5>
 			<h5 id="new">Number of vertices: <input type="number" id="n" min="6" max="30" value="10" /> 
-			<input type="button" value="Generate" onclick="reset($('#n').val())" /></h5>
+			<input type="button" value="Generate" onclick="reset($('#n').val())" /></h5> 
+			<h5 id="highlight"><input type="button" id="hCheck" value="Highlight"  /></h5>
 		</div>
 		<br />
 		<canvas id="playArea" width="1100" height="520"></canvas>
